@@ -1,6 +1,7 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, udf, regexp_replace
 from pyspark.sql.types import StructType, StructField, IntegerType
+from TagTools import rule_to_tuple_udf
 
 if __name__ == '__main__':
     # spark 初始化
@@ -28,16 +29,8 @@ if __name__ == '__main__':
     selectField = rule[1].split("=")[1].split("|")
     # print(rule)
 
-    # 自定义udf函数,解析五级标签规则
-    rule_to_tuple_udf = udf(
-        lambda rule: (int(rule.split("-")[0]), int(rule.split("-")[1])),
-        StructType([
-            StructField("start", IntegerType(), True),
-            StructField("end", IntegerType(), True)
-        ])
-    )
-    # 注册UDF
-    spark.udf.register("rule_to_tuple", rule_to_tuple_udf)
+    # 这里把udf函数放到了TagTool.py里面,并import了
+
     # 提取start和end
     # 取五级标签
     attr = df.filter("level==5") \
