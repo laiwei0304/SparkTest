@@ -5,7 +5,7 @@ from pyspark.sql.functions import col
 
 
 # if __name__ == '__main__':
-class DoGenderTag(object):
+class DoJobTag(object):
 
     @staticmethod
     def start():
@@ -14,9 +14,10 @@ class DoGenderTag(object):
         # spark 初始化
         spark = SparkSession. \
             Builder(). \
-            appName('DoGenderTag'). \
+            appName('DoJobTag'). \
             master('local'). \
             config("spark.debug.maxToStringFields", "100"). \
+            config("spark.executor.memory", "6g"). \
             getOrCreate()
         # mysql 配置
         prop = {'user': 'root',
@@ -29,11 +30,11 @@ class DoGenderTag(object):
 
         # 从基础标签表tbl_basic_tags中提取规则，存入字典rule中
         rule = df.filter("level==4") \
-            .where(col("id") == 106) \
+            .where(col("id") == 113) \
             .head() \
             .asDict()["rule"]
         if not rule:
-            raise Exception("性别标签未提供数据源信息，无法获取业务数据")
+            raise Exception("职业标签未提供数据源信息，无法获取业务数据")
         else:
             rule = rule.split(";")
         # print(rule)
@@ -44,7 +45,7 @@ class DoGenderTag(object):
 
         # 从基础标签表中提取该4级标签对应5级标签的名称和规则
         attr = df.filter("level==5") \
-            .where(col("pid") == 106) \
+            .where(col("pid") == 113) \
             .select("name", "rule")
         # attr.show()
 
@@ -52,21 +53,21 @@ class DoGenderTag(object):
         df2 = spark.read.jdbc(url=url, table=selectTable, properties=prop)
         biz = df2.select(selectField)
         # 打标签（不同模型不一样）
-        rst = biz.join(attr, col("gender") == col("rule")) \
-            .drop("gender", "rule") \
-            .withColumnRenamed("name", "gender") \
+        rst = biz.join(attr, col("job") == col("rule")) \
+            .drop("job", "rule") \
+            .withColumnRenamed("name", "job") \
             .withColumnRenamed("id", "user_id") \
             .orderBy("user_id")
-        rst.show()
+        # rst.show()
 
         # 存储打好标签的数据
-        # rst.write.jdbc(url=url, table='tbl_gender_tag', mode='append', properties=prop)
+        # rst.write.jdbc(url=url, table='tbl_job_tag', mode='overwrite', properties=prop)
         rst.write.format("jdbc").mode("overwrite") \
             .option("truncate", "true") \
             .option("url", url) \
-            .option("dbtable", 'tbl_gender_tag') \
+            .option("dbtable", 'tbl_job_tag') \
             .option("user", 'root') \
             .option("password", 'admin') \
             .save()
-        print("性别标签计算完成！")
+        print("职业标签计算完成!")
         # spark.stop()
