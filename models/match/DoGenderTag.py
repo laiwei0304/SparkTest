@@ -57,10 +57,9 @@ class DoGenderTag(object):
             .withColumnRenamed("name", "gender") \
             .withColumnRenamed("id", "user_id") \
             .orderBy("user_id")
-        rst.show()
+        # rst.show()
 
         # 存储打好标签的数据
-        # rst.write.jdbc(url=url, table='tbl_gender_tag', mode='append', properties=prop)
         rst.write.format("jdbc").mode("overwrite") \
             .option("truncate", "true") \
             .option("url", url) \

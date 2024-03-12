@@ -68,5 +68,5 @@ class DoPoliticalFaceTag(object):
             .option("user", 'root') \
             .option("password", 'admin') \
             .save()
-        print("政治面貌标签计算完成!")
+        print("政治面貌标签计算完成！")
         # spark.stop()

@@ -73,5 +73,5 @@ class DoMarriageTag(object):
             .option("user", 'root') \
             .option("password", 'admin') \
             .save()
-        print("婚姻状况标签计算完成!")
+        print("婚姻状况标签计算完成！")
         # spark.stop()
