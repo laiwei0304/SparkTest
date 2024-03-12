@@ -1,8 +1,16 @@
+import findspark
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, from_unixtime, current_timestamp, datediff
 from TagTools import rule_to_tuple_udf
 
-if __name__ == '__main__':
+
+# if __name__ == '__main__':
+class DoConsumeCycleTag(object):
+
+    @staticmethod
+    def start():
+        findspark.init()
+
     # spark 初始化
     spark = SparkSession. \
         Builder(). \
@@ -80,10 +88,11 @@ if __name__ == '__main__':
     )
     )
     # rst.show()
-rst.write.format("jdbc").mode("overwrite") \
-    .option("truncate", "true") \
-    .option("url", url) \
-    .option("dbtable", 'tbl_consumeCycle_tag') \
-    .option("user", 'root') \
-    .option("password", 'admin') \
-    .save()
+
+    rst.write.format("jdbc").mode("overwrite") \
+        .option("truncate", "true") \
+        .option("url", url) \
+        .option("dbtable", 'tbl_consumeCycle_tag') \
+        .option("user", 'root') \
+        .option("password", 'admin') \
+        .save()
