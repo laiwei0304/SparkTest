@@ -1,9 +1,17 @@
+import findspark
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, udf, regexp_replace
-from pyspark.sql.types import StructType, StructField, IntegerType
+from pyspark.sql.functions import col, regexp_replace
+from pyspark.sql.types import IntegerType
 from TagTools import rule_to_tuple_udf
 
-if __name__ == '__main__':
+
+# if __name__ == '__main__':
+class DoAgeRangeTag(object):
+
+    @staticmethod
+    def start():
+        findspark.init()
+
     # spark 初始化
     spark = SparkSession. \
         Builder(). \
