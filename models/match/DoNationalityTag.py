@@ -67,5 +67,5 @@ class DoNationalityTag(object):
             .option("user", 'root') \
             .option("password", 'admin') \
             .save()
-        print("所属地区标签计算完成!")
+        print("所属地区标签计算完成！")
         # spark.stop()
