@@ -57,7 +57,7 @@ class DoGenderTag(object):
             .withColumnRenamed("name", "gender") \
             .withColumnRenamed("id", "user_id") \
             .orderBy("user_id")
-        # rst.show()
+        rst.show()
 
         # 存储打好标签的数据
         rst.write.format("jdbc").mode("overwrite") \
@@ -69,3 +69,7 @@ class DoGenderTag(object):
             .save()
         print("性别标签计算完成！")
         # spark.stop()
+
+
+# if __name__ == '__main__':
+#     DoGenderTag.start()
