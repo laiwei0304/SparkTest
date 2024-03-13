@@ -17,7 +17,7 @@ class DoRfmTag(object):
         # spark 初始化
         spark = SparkSession. \
             Builder(). \
-            appName('DoGenderTag'). \
+            appName('DoRfmTag'). \
             master('local'). \
             config("spark.debug.maxToStringFields", "100"). \
             getOrCreate()
