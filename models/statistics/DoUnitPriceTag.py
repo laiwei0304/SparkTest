@@ -1,6 +1,6 @@
 # import findspark
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, round, from_unixtime, current_timestamp, datediff
+from pyspark.sql.functions import col, round
 from TagTools import rule_to_tuple_udf
 
 '''
@@ -62,19 +62,34 @@ if __name__ == '__main__':
 
     # 计算客单价
     unitPriceDF = orderAmountDF.select(
-        col("memberId").alias("id"),
+        col("memberId"),
         # 计算天数
         round(col("total_orderAmount") / col("total_order"), 2).alias("unitPrice")
     )
     # unitPriceDF.show(30)
 
-unitPriceDF.write.format("jdbc").mode("overwrite") \
+    rst = (unitPriceDF.join(attr, on=None)  # 连接attr，这里默认使用两个DataFrame中同名的列作为连接键
+    .where(
+        col("unitPrice").between(col("start"), col("end"))  # 筛选出unitPrice在start和end之间的行
+    )
+    .select(
+        col("memberId").alias("userId"),  # 重命名id列为userId
+        col("name").alias("unitPriceRange"),
+        col("unitPrice")
+    )
+        # .orderBy("userId")
+    )
+    rst.show()
+'''
+rst.write.format("jdbc").mode("overwrite") \
         .option("truncate", "true") \
         .option("url", url) \
         .option("dbtable", 'tbl_unitPrice_tag') \
         .option("user", 'root') \
         .option("password", 'admin') \
         .save()
+'''
+
 
 
 '''
