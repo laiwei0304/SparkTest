@@ -32,9 +32,14 @@ class DoUserProfile(object):
         politicalFace_df = spark.read.jdbc(url=url, table='tbl_politicalface_tag', properties=prop)
         isBlackList_df = spark.read.jdbc(url=url, table='tbl_isblacklist_tag', properties=prop)
         rfm_df = spark.read.jdbc(url=url, table='tbl_rfm_tag', properties=prop)
+        rfe_df = spark.read.jdbc(url=url, table='tbl_rfe_tag', properties=prop)
+        psm_df = spark.read.jdbc(url=url, table='tbl_psm_tag', properties=prop)
+        usg_df = spark.read.jdbc(url=url, table='tbl_usg_tag', properties=prop)
+
         add_df = gender_df.join(job_df, on='user_id').join(nationality_df, on='user_id') \
             .join(marriage_df, on='user_id').join(politicalFace_df, on='user_id').join(isBlackList_df, on='user_id') \
-            .join(rfm_df, on='user_id').orderBy("user_id")
+            .join(rfm_df, on='user_id').join(rfe_df, on='user_id').join(psm_df, on='user_id')\
+            .join(usg_df, on='user_id').orderBy("user_id")
         add_df.show()
         # add_df.write.format("jdbc").mode("overwrite") \
         #     .option("truncate", "true") \
