@@ -79,16 +79,16 @@ if __name__ == '__main__':
     )
         # .orderBy("userId")
     )
-    rst.show()
-'''
-rst.write.format("jdbc").mode("overwrite") \
-        .option("truncate", "true") \
-        .option("url", url) \
-        .option("dbtable", 'tbl_unitPrice_tag') \
-        .option("user", 'root') \
-        .option("password", 'admin') \
-        .save()
-'''
+    # rst.show()
+
+    rst.write.format("jdbc").mode("overwrite") \
+            .option("truncate", "true") \
+            .option("url", url) \
+            .option("dbtable", 'tbl_unitPrice_tag') \
+            .option("user", 'root') \
+            .option("password", 'admin') \
+            .save()
+
 
 
 
