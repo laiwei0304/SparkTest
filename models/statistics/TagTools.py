@@ -35,3 +35,17 @@ def url_to_product(url):
         # 注册UDF
 
 url_to_product = udf(url_to_product, StringType())
+
+# 自定义udf函数,提取给用户推荐的top5商品
+string_to_product_udf = udf(
+    lambda rule: (int(rule.split(",")[0]), int(rule.split(",")[1]),int(rule.split(",")[2]),int(rule.split(",")[3]),int(rule.split(",")[4])),
+    StructType([
+        StructField("top1", IntegerType(), True),
+        StructField("top2", IntegerType(), True),
+        StructField("top3", IntegerType(), True),
+        StructField("top4", IntegerType(), True),
+        StructField("top5", IntegerType(), True)
+    ])
+)
+# 注册UDF
+spark.udf.register("string_to_product", string_to_product_udf)
