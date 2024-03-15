@@ -5,7 +5,7 @@ from pyspark import StorageLevel
 from pyspark.ml import PipelineModel, Pipeline
 from pyspark.ml.classification import DecisionTreeClassifier
 from pyspark.ml.clustering import KMeansModel, KMeans
-from pyspark.ml.evaluation import MulticlassClassificationEvaluator,RegressionEvaluator
+from pyspark.ml.evaluation import MulticlassClassificationEvaluator, RegressionEvaluator
 from pyspark.ml.feature import VectorAssembler, VectorIndexer
 from pyspark.ml.tuning import ParamGridBuilder, CrossValidator
 from pyspark.ml.recommendation import ALS, ALSModel
@@ -80,7 +80,7 @@ class MLModelTools(object):
         return ssse, model, maxIter
 
     @staticmethod
-    def convertKMeansIndexMap(centers,predictionDf: DataFrame,mlType: string):
+    def convertKMeansIndexMap(centers, predictionDf: DataFrame, mlType: string):
         oldIndex = []
         if mlType == "rfm" or mlType == "psm":
             oldIndex = [0, 1, 2, 3, 4]
@@ -178,7 +178,7 @@ class MLModelTools(object):
 
         als_model = als.fit(dataframe)  # 应用数据集，训练模型
         dataframe.unpersist()  # 取消数据缓存
-
+        '''
         # 4. 模型评估
         evaluator = RegressionEvaluator() \
             .setLabelCol("rating") \
@@ -190,4 +190,6 @@ class MLModelTools(object):
         # 计算RMSE
         rmse = evaluator.evaluate(predictions_df)
         print(f"rmse = {rmse}")
+        '''
+
         return als_model
