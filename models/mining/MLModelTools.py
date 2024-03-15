@@ -97,7 +97,7 @@ class MLModelTools(object):
         print(f"旧聚类中心索引-新聚类中心索引: {sortedDict}")
         change_index_udf = udf(lambda x: sortedDict[x], IntegerType())
         clusterDf = predictionDf.withColumn("prediction", change_index_udf(col("prediction"))) \
-            .select("user_id", "prediction")
+            .select("userId", "prediction")
         return clusterDf
 
     @staticmethod

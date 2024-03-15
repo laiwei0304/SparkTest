@@ -56,8 +56,8 @@ class DoJobTag(object):
         rst = biz.join(attr, col("job") == col("rule")) \
             .drop("job", "rule") \
             .withColumnRenamed("name", "job") \
-            .withColumnRenamed("id", "user_id") \
-            .orderBy("user_id")
+            .withColumnRenamed("id", "userId") \
+            .orderBy("userId")
         # rst.show()
 
         # 存储打好标签的数据

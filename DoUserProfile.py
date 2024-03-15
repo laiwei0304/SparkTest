@@ -35,11 +35,33 @@ class DoUserProfile(object):
         rfe_df = spark.read.jdbc(url=url, table='tbl_rfe_tag', properties=prop)
         psm_df = spark.read.jdbc(url=url, table='tbl_psm_tag', properties=prop)
         usg_df = spark.read.jdbc(url=url, table='tbl_usg_tag', properties=prop)
+        ageRange_df = spark.read.jdbc(url=url, table='tbl_ageRange_tag', properties=prop)
+        buyFrequency_df = spark.read.jdbc(url=url, table='tbl_buyFrequency_tag', properties=prop).select(
+            col("userId"), col("value").alias("buyFrequency"))
+        consumeCycle_df = spark.read.jdbc(url=url, table='tbl_consumeCycle_tag', properties=prop)
+        exchangeRate_df = spark.read.jdbc(url=url, table='tbl_exchangeRate_tag', properties=prop).select(
+            col("userId"), col("value").alias("exchangeRate"))
+        lastLogin_df = spark.read.jdbc(url=url, table='tbl_lastLogin_tag', properties=prop)
+        logFrequency_df = spark.read.jdbc(url=url, table='tbl_logFrequency_tag', properties=prop).select(
+            col("userId"), col("value").alias("logFrequency"))
+        logTimeSlot_df = spark.read.jdbc(url=url, table='tbl_logTimeSlot_tag', properties=prop).select(
+            col("userId"), col("timeSlot").alias("logTimeSlot"))
+        maxOrder_df = spark.read.jdbc(url=url, table='tbl_maxOrder_tag', properties=prop)
+        payType_df = spark.read.jdbc(url=url, table='tbl_payType_tag', properties=prop).select(
+            col("userId"), col("payment").alias("payType"))
+        returnRate_df = spark.read.jdbc(url=url, table='tbl_returnRate_tag', properties=prop).select(
+            col("userId"), col("value").alias("returnRate"))
+        unitPrice_df = spark.read.jdbc(url=url, table='tbl_unitPrice_tag', properties=prop).select(
+            col("userId"), col("unitPriceRange"))
 
-        add_df = gender_df.join(job_df, on='user_id').join(nationality_df, on='user_id') \
-            .join(marriage_df, on='user_id').join(politicalFace_df, on='user_id').join(isBlackList_df, on='user_id') \
-            .join(rfm_df, on='user_id').join(rfe_df, on='user_id').join(psm_df, on='user_id')\
-            .join(usg_df, on='user_id').orderBy("user_id")
+        add_df = gender_df.join(job_df, on='userId').join(nationality_df, on='userId') \
+            .join(marriage_df, on='userId').join(politicalFace_df, on='userId').join(isBlackList_df, on='userId') \
+            .join(rfm_df, on='userId').join(rfe_df, on='userId').join(psm_df, on='userId') \
+            .join(usg_df, on='userId').join(ageRange_df, on='userId').join(buyFrequency_df, on='userId')\
+            .join(consumeCycle_df, on='userId').join(exchangeRate_df, on='userId').join(lastLogin_df, on='userId')\
+            .join(logFrequency_df, on='userId').join(logTimeSlot_df, on='userId').join(maxOrder_df, on='userId') \
+            .join(payType_df, on='userId').join(returnRate_df, on='userId').join(unitPrice_df, on='userId')\
+            .orderBy("userId")
         add_df.show()
         # add_df.write.format("jdbc").mode("overwrite") \
         #     .option("truncate", "true") \

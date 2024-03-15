@@ -55,8 +55,8 @@ class DoGenderTag(object):
         rst = biz.join(attr, col("gender") == col("rule")) \
             .drop("gender", "rule") \
             .withColumnRenamed("name", "gender") \
-            .withColumnRenamed("id", "user_id") \
-            .orderBy("user_id")
+            .withColumnRenamed("id", "userId") \
+            .orderBy("userId")
         rst.show()
 
         # 存储打好标签的数据
