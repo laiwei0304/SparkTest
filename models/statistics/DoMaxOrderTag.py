@@ -63,19 +63,20 @@ if __name__ == '__main__':
     )
     .select(
         col("memberId").alias("userId"),  # 重命名id列为userId
+        col("max_orderAmount"),
         col("name").alias("maxOrderRange")
     )
         # .orderBy("userId")
     )
     # rst.show()
 
-rst.write.format("jdbc").mode("overwrite") \
-        .option("truncate", "true") \
-        .option("url", url) \
-        .option("dbtable", 'tbl_maxOrder_tag') \
-        .option("user", 'root') \
-        .option("password", 'admin') \
-        .save()
+    rst.write.format("jdbc").mode("overwrite") \
+            .option("truncate", "true") \
+            .option("url", url) \
+            .option("dbtable", 'tbl_maxOrder_tag') \
+            .option("user", 'root') \
+            .option("password", 'admin') \
+            .save()
 
 
 

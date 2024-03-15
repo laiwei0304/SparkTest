@@ -1,6 +1,7 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import udf
-from pyspark.sql.types import StructType, StructField, IntegerType
+from pyspark.sql.types import StructType, StructField, IntegerType,StringType
+import re
 
 # 初始化Spark会话（如果还没有的话）
 spark = SparkSession.builder.appName("MyUDFs").getOrCreate()
@@ -15,3 +16,22 @@ rule_to_tuple_udf = udf(
 )
 # 注册UDF
 spark.udf.register("rule_to_tuple", rule_to_tuple_udf)
+
+
+# 定义正则表达式模式
+regex_pattern = r'^.+\/product\/(\d+)\.html.+$'
+
+# 定义UDF
+def url_to_product(url):
+    # 尝试匹配正则表达式
+    match = re.search(regex_pattern, url)
+
+    # 如果匹配成功，返回组1（即产品ID），否则返回None
+    if match:
+        return match.group(1)
+    else:
+        return "not_a_product"
+
+        # 注册UDF
+
+url_to_product = udf(url_to_product, StringType())

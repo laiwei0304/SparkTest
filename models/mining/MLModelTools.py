@@ -5,9 +5,10 @@ from pyspark import StorageLevel
 from pyspark.ml import PipelineModel, Pipeline
 from pyspark.ml.classification import DecisionTreeClassifier
 from pyspark.ml.clustering import KMeansModel, KMeans
-from pyspark.ml.evaluation import MulticlassClassificationEvaluator
+from pyspark.ml.evaluation import MulticlassClassificationEvaluator,RegressionEvaluator
 from pyspark.ml.feature import VectorAssembler, VectorIndexer
 from pyspark.ml.tuning import ParamGridBuilder, CrossValidator
+from pyspark.ml.recommendation import ALS, ALSModel
 from pyspark.sql import DataFrame
 from pyspark.sql.functions import udf, col
 from pyspark.sql.types import IntegerType
@@ -25,6 +26,8 @@ class MLModelTools(object):
                 model = KMeansModel.load(modelPath)
             elif mlType == "usg":
                 model = PipelineModel.load(modelPath)
+            elif mlType == "bp":
+                model = ALSModel.load(modelPath)
             return model
         else:
             print("模型不存在，开始训练模型")
@@ -34,6 +37,8 @@ class MLModelTools(object):
                 model = MLModelTools.trainBestKMeansModel(dataframe, 4)
             elif mlType == "usg":
                 model = MLModelTools.trainBestPipelineModel(dataframe)
+            elif mlType == "bp":
+                model = MLModelTools.trainALSModel(dataframe)
             model.save(modelPath)
             return model
 
@@ -152,3 +157,37 @@ class MLModelTools(object):
 
         # 返回最佳模型
         return pipelineModel
+
+    def trainALSModel(dataframe: DataFrame):
+        # 数据缓存
+        dataframe.persist(StorageLevel.MEMORY_AND_DISK)
+        # return ratings_df
+
+        # 3. 使用ALS算法训练模型（评分为隐式评分）
+        als = ALS() \
+            .setUserCol("userId") \
+            .setItemCol("productId") \
+            .setRatingCol("rating") \
+            .setPredictionCol("prediction") \
+            .setImplicitPrefs(True) \
+            .setRank(10) \
+            .setMaxIter(10) \
+            .setColdStartStrategy("drop") \
+            .setAlpha(1.0) \
+            .setRegParam(1.0)
+
+        als_model = als.fit(dataframe)  # 应用数据集，训练模型
+        dataframe.unpersist()  # 取消数据缓存
+
+        # 4. 模型评估
+        evaluator = RegressionEvaluator() \
+            .setLabelCol("rating") \
+            .setPredictionCol("prediction") \
+            .setMetricName("rmse")
+        # 转换ratings_df，以便得到预测值
+        predictions_df = als_model.transform(dataframe)
+        predictions_df.show()
+        # 计算RMSE
+        rmse = evaluator.evaluate(predictions_df)
+        print(f"rmse = {rmse}")
+        return als_model
