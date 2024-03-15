@@ -55,8 +55,8 @@ class DoPoliticalFaceTag(object):
         rst = biz.join(attr, col("politicalFace") == col("rule")) \
             .drop("politicalFace", "rule") \
             .withColumnRenamed("name", "politicalFace") \
-            .withColumnRenamed("id", "user_id") \
-            .orderBy("user_id")
+            .withColumnRenamed("id", "userId") \
+            .orderBy("userId")
         # rst.show()
 
         # 存储打好标签的数据
@@ -70,3 +70,7 @@ class DoPoliticalFaceTag(object):
             .save()
         print("政治面貌标签计算完成！")
         # spark.stop()
+
+
+# if __name__ == '__main__':
+#     DoPoliticalFaceTag.start()

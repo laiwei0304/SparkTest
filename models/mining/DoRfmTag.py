@@ -39,7 +39,7 @@ class DoRfmTag(object):
             .agg(max("finishTime").alias("max_finishTime"),
                  count("orderSn").alias("frequency"),
                  sum(col("orderAmount").cast(DecimalType(10, 2))).alias("monetary")) \
-            .select(col("memberId").alias("user_id"),
+            .select(col("memberId").alias("userId"),
                     datediff(current_timestamp(), from_unixtime("max_finishTime")).alias("recency"),
                     "frequency",
                     "monetary")
@@ -66,7 +66,7 @@ class DoRfmTag(object):
             .when(col("monetary").between(50000, 99999), 3.0) \
             .when(col("monetary").between(100000, 199999), 4.0) \
             .when(col("monetary") >= 200000, 5.0)
-        rfmScoreDf = rfmDf.select("user_id",
+        rfmScoreDf = rfmDf.select("userId",
                                   rWhen.alias("r_score"),
                                   fWhen.alias("f_score"),
                                   mWhen.alias("m_score"))
@@ -117,7 +117,7 @@ class DoRfmTag(object):
         rst = clusterDf.join(attr, col("prediction") == col("rule")) \
             .drop("prediction", "rule") \
             .withColumnRenamed("name", "rfm") \
-            .orderBy("user_id")
+            .orderBy("userId")
         # rst.show()
 
         # 存储打好标签的数据
@@ -131,5 +131,5 @@ class DoRfmTag(object):
         print("用户价值标签计算完成！")
 
 
-if __name__ == '__main__':
-    DoRfmTag.start()
+# if __name__ == '__main__':
+#     DoRfmTag.start()

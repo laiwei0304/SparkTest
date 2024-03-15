@@ -61,8 +61,8 @@ class DoMarriageTag(object):
         rst = biz.join(attr, col("marriage") == col("rule")) \
             .drop("marriage", "rule") \
             .withColumnRenamed("name", "marriage") \
-            .withColumnRenamed("id", "user_id") \
-            .orderBy("user_id")
+            .withColumnRenamed("id", "userId") \
+            .orderBy("userId")
         rst.show()
 
         # 存储打好标签的数据

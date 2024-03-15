@@ -60,11 +60,11 @@ class DoPsmTag(object):
         tdarColumn = (col("tda") / col("tra")).alias("tdar")
         adarColumn = ((col("tda") / col("tdon")) / (col("tra") / col("ton"))).alias("adar")
         psmColumn = (col("tdonr") + col("tdar") + col("adar")).alias("psm")
-        psmDf = df.select(col("memberId").alias("user_id"),
+        psmDf = df.select(col("memberId").alias("userId"),
                           raColumn, daColumn, paColumn, stateColumn) \
-            .groupBy("user_id") \
+            .groupBy("userId") \
             .agg(tonColumn, tdonColumn, traColumn, tdaColumn) \
-            .select("user_id", tdonrColumn, tdarColumn, adarColumn) \
+            .select("userId", tdonrColumn, tdarColumn, adarColumn) \
             .select("*", psmColumn) \
             .select("*", when(col("psm").isNull(), 0.00000001).otherwise(col("psm")).alias("psm_score"))
         # psmDf.printSchema()
@@ -105,7 +105,7 @@ class DoPsmTag(object):
         rst = clusterDf.join(attr, col("prediction") == col("rule")) \
             .drop("prediction", "rule") \
             .withColumnRenamed("name", "psm") \
-            .orderBy("user_id")
+            .orderBy("userId")
         # rst.show()
 
         # 存储打好标签的数据
@@ -119,5 +119,5 @@ class DoPsmTag(object):
         print("价格敏感度标签计算完成！")
 
 
-if __name__ == '__main__':
-    DoPsmTag.start()
+# if __name__ == '__main__':
+#     DoPsmTag.start()

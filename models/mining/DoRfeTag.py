@@ -37,7 +37,7 @@ class DoRfeTag(object):
             .agg(max("log_time").alias("last_time"),
                  count("loc_url").alias("frequency"),
                  countDistinct("loc_url").alias("engagements")) \
-            .select(col("global_user_id").cast(LongType()).alias("user_id"),
+            .select(col("global_user_id").cast(LongType()).alias("userId"),
                     datediff(date_sub(current_timestamp(), 1640), col("last_time")).alias("recency"),
                     "frequency",
                     "engagements")
@@ -64,7 +64,7 @@ class DoRfeTag(object):
             .when(col("engagements").between(150, 199), 3.0) \
             .when(col("engagements").between(200, 249), 4.0) \
             .when(col("engagements") >= 250, 5.0)
-        rfeScoreDf = rfeDf.select("user_id",
+        rfeScoreDf = rfeDf.select("userId",
                                   rWhen.alias("r_score"),
                                   fWhen.alias("f_score"),
                                   eWhen.alias("e_score"))
@@ -114,7 +114,7 @@ class DoRfeTag(object):
         rst = clusterDf.join(attr, col("prediction") == col("rule")) \
             .drop("prediction", "rule") \
             .withColumnRenamed("name", "rfe") \
-            .orderBy("user_id")
+            .orderBy("userId")
         rst.show()
 
         # 存储打好标签的数据
@@ -128,5 +128,5 @@ class DoRfeTag(object):
         print("用户活跃度标签计算完成！")
 
 
-if __name__ == '__main__':
-    DoRfeTag.start()
+# if __name__ == '__main__':
+#     DoRfeTag.start()
