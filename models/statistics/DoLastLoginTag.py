@@ -1,16 +1,14 @@
-# import findspark
+import findspark
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, from_unixtime, current_timestamp, datediff
 from TagTools import rule_to_tuple_udf
 
-'''
-class DoConsumeCycleTag(object):
+
+class DoLastLoginTag(object):
 
     @staticmethod
     def start():
         findspark.init()
-'''
-if __name__ == '__main__':
 
     # spark 初始化
     spark = SparkSession. \
@@ -91,7 +89,7 @@ if __name__ == '__main__':
     .option("user", 'root') \
     .option("password", 'admin') \
     .save()
-
+    print("最近登录标签计算完成！")
 
 
 

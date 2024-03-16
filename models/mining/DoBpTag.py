@@ -2,22 +2,18 @@ import findspark
 from pyspark import StorageLevel
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import udf, col, concat_ws
-from models.statistics.TagTools import url_to_product,string_to_product_udf
+from models.statistics.TagTools import url_to_product, string_to_product_udf
 from pyspark.sql.types import StringType, IntegerType
 from MLModelTools import MLModelTools
 from pyspark.ml.recommendation import ALS
 from pyspark.ml.evaluation import RegressionEvaluator
 
 
-'''
 class DoBpTag(object):
 
     @staticmethod
     def start():
         findspark.init()
-'''
-if __name__ == '__main__':
-    # DoBpTag.start()
 
         # spark 初始化
         spark = SparkSession. \
@@ -50,7 +46,7 @@ if __name__ == '__main__':
         .select(
             col("userId").cast(IntegerType()),  #
             col("productId").cast(IntegerType()),  #
-            col("count").alias("rating").cast(IntegerType()) #
+            col("count").alias("rating").cast(IntegerType())  #
         )
         )
         # ratings_df.show(30)
@@ -109,7 +105,7 @@ if __name__ == '__main__':
         |737   |6603,10935,9371,6395,11949|0.24617983,0.24455485,0.23640442,0.21916196,0.209805  |
         +------+--------------------------+------------------------------------------------------+
         '''
-        recDF = modelDF\
+        recDF = modelDF \
             .select(col("userId"), string_to_product_udf(col("productIds")).alias("products")) \
             .select(
             col("userId"),  # 选择name列
@@ -121,45 +117,45 @@ if __name__ == '__main__':
         )
 
         recDF.show()
-# productId没有10935等商品！！tbl_goods数据不全！
-#         df2 = spark.read.jdbc(url=url, table='tbl_goods', properties=prop)
-#         nameDF=df2.groupBy(col("productId"), col("productName")).count()\
-#                 .select(col("productId"), col("productName"))
-#         # nameDF.show()
-#
-#         #top1
-#         recDF=recDF.withColumnRenamed('top1', 'productId')
-#         recDF=recDF.join(nameDF,on="productId")\
-#                     .withColumnRenamed('productName', 'top1')\
-#                     .drop("productId")
-#         recDF.show()
-#         nameDF.show()
-#         # top2
-#         recDF2 = recDF.withColumnRenamed('top2', 'productId')
-#         recDF2.show()
-#         recDF2 = recDF2.join(nameDF, on="productId") \
-#             .withColumnRenamed('productName', 'top2') \
-#             .drop("productId")
-#         recDF2.show()
-#     # top3
-#         recDF3 = recDF2.withColumnRenamed('top3', 'productId')
-#         recDF3 = recDF3.join(nameDF, on="productId") \
-#             .withColumnRenamed('productName', 'top3') \
-#             .drop("productId")
-#         recDF3.show()
-# # top4
-#         recDF4 = recDF3.withColumnRenamed('top4', 'productId')
-#         recDF4 = recDF4.join(nameDF, on="productId") \
-#             .withColumnRenamed('productName', 'top4') \
-#             .drop("productId")
-#         recDF4.show()
-# # top5
-#         recDF5 = recDF4.withColumnRenamed('top5', 'productId')
-#         recDF5 = recDF5.join(nameDF, on="productId") \
-#             .withColumnRenamed('productName', 'top5') \
-#             .drop("productId")
-#
-#         recDF5.show()
+        # productId没有10935等商品！！tbl_goods数据不全！
+        #         df2 = spark.read.jdbc(url=url, table='tbl_goods', properties=prop)
+        #         nameDF=df2.groupBy(col("productId"), col("productName")).count()\
+        #                 .select(col("productId"), col("productName"))
+        #         # nameDF.show()
+        #
+        #         #top1
+        #         recDF=recDF.withColumnRenamed('top1', 'productId')
+        #         recDF=recDF.join(nameDF,on="productId")\
+        #                     .withColumnRenamed('productName', 'top1')\
+        #                     .drop("productId")
+        #         recDF.show()
+        #         nameDF.show()
+        #         # top2
+        #         recDF2 = recDF.withColumnRenamed('top2', 'productId')
+        #         recDF2.show()
+        #         recDF2 = recDF2.join(nameDF, on="productId") \
+        #             .withColumnRenamed('productName', 'top2') \
+        #             .drop("productId")
+        #         recDF2.show()
+        #     # top3
+        #         recDF3 = recDF2.withColumnRenamed('top3', 'productId')
+        #         recDF3 = recDF3.join(nameDF, on="productId") \
+        #             .withColumnRenamed('productName', 'top3') \
+        #             .drop("productId")
+        #         recDF3.show()
+        # # top4
+        #         recDF4 = recDF3.withColumnRenamed('top4', 'productId')
+        #         recDF4 = recDF4.join(nameDF, on="productId") \
+        #             .withColumnRenamed('productName', 'top4') \
+        #             .drop("productId")
+        #         recDF4.show()
+        # # top5
+        #         recDF5 = recDF4.withColumnRenamed('top5', 'productId')
+        #         recDF5 = recDF5.join(nameDF, on="productId") \
+        #             .withColumnRenamed('productName', 'top5') \
+        #             .drop("productId")
+        #
+        #         recDF5.show()
 
         recDF.write.format("jdbc").mode("overwrite") \
             .option("truncate", "true") \
@@ -168,5 +164,7 @@ if __name__ == '__main__':
             .option("user", 'root') \
             .option("password", 'admin') \
             .save()
+        print("用户购物偏好标签计算完成！")
 
-
+# if __name__ == '__main__':
+#   DoBpTag.start()

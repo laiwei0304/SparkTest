@@ -94,7 +94,7 @@ class DoRfmTag(object):
 
         # 使用模型预测
         predictionDf = kMeansModel.transform(featuresDf)
-        # predictionDf.show()
+        # predictionDf.select("userId", "r_score", "f_score", "m_score", "prediction").show()
 
         # 通过计算轮廓系数评估聚类
         # evaluator = ClusteringEvaluator()

@@ -51,7 +51,9 @@ class MLModelTools(object):
         # 最大迭代次数, 使用训练验证模式完成
         # 1.设置超参数的值
         maxIters = [5, 10, 20]
+
         dataframe.persist(StorageLevel.MEMORY_AND_DISK)
+
         # 2.不同超参数的值，训练模型
         # 返回三元组(评估指标, 模型, 超参数的值)
         models = []
@@ -62,6 +64,9 @@ class MLModelTools(object):
         # 3.获取最佳模型
         models.sort(key=lambda x: x[0])
         bestModel = models[0][1]
+
+        dataframe.unpersist()
+
         print(bestModel)
         # 4.返回最佳模型
         return bestModel
@@ -75,9 +80,9 @@ class MLModelTools(object):
             .setMaxIter(maxIter) \
             .setSeed(31)
         model = kMeans.fit(dataframe)
-        ssse = model.computeCost(dataframe)
-        # print(f"WSSSE = {ssse}")
-        return ssse, model, maxIter
+        sse = model.computeCost(dataframe)
+        # print(f"WSSSE = {sse}")
+        return sse, model, maxIter
 
     @staticmethod
     def convertKMeansIndexMap(centers, predictionDf: DataFrame, mlType: string):
@@ -155,6 +160,8 @@ class MLModelTools(object):
         # 获取最佳模型
         pipelineModel = cvModel.bestModel
 
+        dataframe.unpersist()
+
         # 返回最佳模型
         return pipelineModel
 
@@ -178,6 +185,7 @@ class MLModelTools(object):
 
         als_model = als.fit(dataframe)  # 应用数据集，训练模型
         dataframe.unpersist()  # 取消数据缓存
+
         '''
         # 4. 模型评估
         evaluator = RegressionEvaluator() \

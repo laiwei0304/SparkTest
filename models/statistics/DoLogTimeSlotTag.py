@@ -3,14 +3,12 @@ from pyspark.sql import SparkSession, Window
 from pyspark.sql.functions import col, hour, row_number
 from TagTools import rule_to_tuple_udf
 
-'''
+
 class DoLogTimeSlotTag(object):
 
     @staticmethod
     def start():
         findspark.init()
-'''
-if __name__ == '__main__':
 
     # spark 初始化
     spark = SparkSession. \
@@ -90,5 +88,5 @@ if __name__ == '__main__':
         .option("user", 'root') \
         .option("password", 'admin') \
         .save()
-
+    print("浏览时段标签计算完成！")
 

@@ -96,3 +96,4 @@ class DoConsumeCycleTag(object):
         .option("user", 'root') \
         .option("password", 'admin') \
         .save()
+    print("消费周期标签计算完成！")

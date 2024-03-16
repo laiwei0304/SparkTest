@@ -67,4 +67,12 @@ class DoAgeRangeTag(object):
     )
     # rst.show()
 
-    rst.write.jdbc(url=url, table='tbl_ageRange_tag', mode='append', properties=prop)
+    rst.write.format("jdbc").mode("overwrite") \
+        .option("truncate", "true") \
+        .option("url", url) \
+        .option("dbtable", 'tbl_ageRange_tag') \
+        .option("user", 'root') \
+        .option("password", 'admin') \
+        .save()
+    print("年龄段标签计算完成！")
+

@@ -1,16 +1,15 @@
-# import findspark
+import findspark
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, when
 from TagTools import rule_to_tuple_udf
 
-'''
+
 class DoReturnRateTag(object):
 
     @staticmethod
     def start():
         findspark.init()
-'''
-if __name__ == '__main__':
+
     # spark 初始化
     spark = SparkSession. \
         Builder(). \
@@ -95,3 +94,4 @@ if __name__ == '__main__':
         .option("user", 'root') \
         .option("password", 'admin') \
         .save()
+    print("退货率标签计算完成！")

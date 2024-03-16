@@ -19,7 +19,7 @@ class DoUsgTag(object):
             appName('DoUsgTag'). \
             master('local'). \
             config("spark.debug.maxToStringFields", "200"). \
-            config("spark.sql.broadcastTimeout", "36000").\
+            config("spark.sql.broadcastTimeout", "36000"). \
             getOrCreate()
         # mysql 配置
         prop = {'user': 'root',
@@ -120,6 +120,7 @@ class DoUsgTag(object):
         # 当模型存在时，直接加载模型；如果不存在，训练获取最佳模型，并保存
         pipelineModel = MLModelTools.loadModel(goodsDf, "usg")
         predictionDf = pipelineModel.transform(goodsDf)
+        # predictionDf.select("userId", "color", "product", "prediction").show()
 
         # 按照用户ID分组，统计每个用户购物男性或女性商品个数及占比
         genderDf = predictionDf.groupBy("userId") \

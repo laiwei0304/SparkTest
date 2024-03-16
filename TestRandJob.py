@@ -66,5 +66,5 @@ class TestRandJob(SparkSessionBase):
         rst.write.format("hive").mode("overwrite").saveAsTable('tbl_gender_tag')
 
 
-if __name__ == '__main__':
-    TestRandJob().start()
+# if __name__ == '__main__':
+#     TestRandJob().start()

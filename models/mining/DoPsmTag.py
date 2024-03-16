@@ -87,7 +87,7 @@ class DoPsmTag(object):
 
         # 使用模型预测
         predictionDf = kMeansModel.transform(featuresDf)
-        # predictionDf.show()
+        # predictionDf.select("userId", "psm_score", "prediction").show()
 
         # 获取聚类中心，并根据psm大小修改索引
         centers = kMeansModel.clusterCenters()
@@ -119,5 +119,5 @@ class DoPsmTag(object):
         print("价格敏感度标签计算完成！")
 
 
-# if __name__ == '__main__':
-#     DoPsmTag.start()
+if __name__ == '__main__':
+    DoPsmTag.start()

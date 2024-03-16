@@ -47,7 +47,7 @@ class DoRfeTag(object):
         # 按照RFE值进行打分（RFM_SCORE)
         #   R:0-15天=5分，16-30天=4分，31-45天=3分，46-60天=2分，大于61天=1分
         #   F:≥400=5分，300-399=4分，200-299=3分，100-199=2分，≤99=1分
-        #   E:≥250=5分，200-249=4分，150-199=3分，149-50=2分，≤49=1分
+        #   E:≥250=5分，200-249=4分，150-199=3分，50-149=2分，≤49=1分
         #   使用CASE WHEN..WHEN...ELSE....END
         rWhen = when(col("recency").between(1, 15), 5.0) \
             .when(col("recency").between(16, 30), 4.0) \
@@ -91,7 +91,7 @@ class DoRfeTag(object):
 
         # 使用模型预测
         predictionDf = kMeansModel.transform(featuresDf)
-        # predictionDf.show()
+        # predictionDf.select("userId", "r_score", "f_score", "e_score", "prediction").show()
 
         # 通过计算轮廓系数评估聚类
         # evaluator = ClusteringEvaluator()

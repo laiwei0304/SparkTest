@@ -46,31 +46,37 @@ class DoUserProfile(object):
             col("userId"), col("value").alias("logFrequency"))
         logTimeSlot_df = spark.read.jdbc(url=url, table='tbl_logTimeSlot_tag', properties=prop).select(
             col("userId"), col("timeSlot").alias("logTimeSlot"))
-        maxOrder_df = spark.read.jdbc(url=url, table='tbl_maxOrder_tag', properties=prop)
+        maxOrder_df = spark.read.jdbc(url=url, table='tbl_maxOrder_tag', properties=prop).select(
+            col("userId"), col("maxOrderRange"))
         payType_df = spark.read.jdbc(url=url, table='tbl_payType_tag', properties=prop).select(
             col("userId"), col("payment").alias("payType"))
         returnRate_df = spark.read.jdbc(url=url, table='tbl_returnRate_tag', properties=prop).select(
             col("userId"), col("value").alias("returnRate"))
         unitPrice_df = spark.read.jdbc(url=url, table='tbl_unitPrice_tag', properties=prop).select(
             col("userId"), col("unitPriceRange"))
+        bp_df = spark.read.jdbc(url=url, table='tbl_bp_tag', properties=prop).select(
+            col("userId"), col("top1").alias("BpTop1"), col("top2").alias("BpTop2"), col("top3").alias("BpTop3"),
+            col("top4").alias("BpTop4"), col("top5").alias("BpTop5"), )
 
         add_df = gender_df.join(job_df, on='userId').join(nationality_df, on='userId') \
             .join(marriage_df, on='userId').join(politicalFace_df, on='userId').join(isBlackList_df, on='userId') \
             .join(rfm_df, on='userId').join(rfe_df, on='userId').join(psm_df, on='userId') \
-            .join(usg_df, on='userId').join(ageRange_df, on='userId').join(buyFrequency_df, on='userId')\
-            .join(consumeCycle_df, on='userId').join(exchangeRate_df, on='userId').join(lastLogin_df, on='userId')\
+            .join(usg_df, on='userId').join(ageRange_df, on='userId').join(buyFrequency_df, on='userId') \
+            .join(consumeCycle_df, on='userId').join(exchangeRate_df, on='userId').join(lastLogin_df, on='userId') \
             .join(logFrequency_df, on='userId').join(logTimeSlot_df, on='userId').join(maxOrder_df, on='userId') \
-            .join(payType_df, on='userId').join(returnRate_df, on='userId').join(unitPrice_df, on='userId')\
+            .join(payType_df, on='userId').join(returnRate_df, on='userId').join(unitPrice_df, on='userId') \
+            .join(bp_df,on='userId')\
             .orderBy("userId")
         add_df.show()
-        # add_df.write.format("jdbc").mode("overwrite") \
-        #     .option("truncate", "true") \
-        #     .option("url", url) \
-        #     .option("dbtable", 'tbl_user_profile') \
-        #     .option("user", 'root') \
-        #     .option("password", 'admin') \
-        #     .save()
+        add_df.write.format("jdbc").mode("overwrite") \
+            .option("truncate", "true") \
+            .option("url", url) \
+            .option("dbtable", 'tbl_user_profile') \
+            .option("user", 'root') \
+            .option("password", 'admin') \
+            .save()
+        print("所有用户画像标签更新完成！")
 
 
-if __name__ == '__main__':
-    DoUserProfile.start()
+# if __name__ == '__main__':
+#     DoUserProfile.start()
