@@ -5,7 +5,7 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, max, count, sum, datediff, from_unixtime, current_timestamp, when, udf, \
     countDistinct, date_sub
 from pyspark.sql.types import DecimalType, IntegerType, LongType
-from MLModelTools import MLModelTools
+from models.mining.MLModelTools import MLModelTools
 
 
 class DoRfeTag(object):

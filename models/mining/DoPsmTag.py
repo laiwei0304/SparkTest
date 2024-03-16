@@ -4,7 +4,7 @@ from pyspark.ml.feature import VectorAssembler, MinMaxScaler
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, max, count, sum, datediff, from_unixtime, current_timestamp, when, udf
 from pyspark.sql.types import DecimalType, IntegerType
-from MLModelTools import MLModelTools
+from models.mining.MLModelTools import MLModelTools
 
 
 class DoPsmTag(object):

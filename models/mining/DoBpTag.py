@@ -4,7 +4,7 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import udf, col, concat_ws
 from models.statistics.TagTools import url_to_product, string_to_product_udf
 from pyspark.sql.types import StringType, IntegerType
-from MLModelTools import MLModelTools
+from models.mining.MLModelTools import MLModelTools
 from pyspark.ml.recommendation import ALS
 from pyspark.ml.evaluation import RegressionEvaluator
 
