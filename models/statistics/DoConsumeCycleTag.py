@@ -80,7 +80,7 @@ class DoConsumeCycleTag(object):
 
         rst = (consumerDaysDF.join(attr, on=None)  # 连接attr，这里默认使用两个DataFrame中同名的列作为连接键
         .where(
-            col("consumer_days").between(col("start"), col("end"))  # 筛选出bornDate在start和end之间的行
+            col("consumer_days").between(col("start"), col("end"))  # 筛选出consumer_days在start和end之间的行
         )
         .select(
             col("id").alias("userId"),  # 重命名id列为userId

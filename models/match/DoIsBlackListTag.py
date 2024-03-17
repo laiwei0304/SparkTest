@@ -68,4 +68,3 @@ class DoIsBlackListTag(object):
             .option("password", 'admin') \
             .save()
         print("黑名单情况标签计算完成！")
-        # spark.stop()

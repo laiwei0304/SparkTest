@@ -68,7 +68,6 @@ class DoGenderTag(object):
             .option("password", 'admin') \
             .save()
         print("性别标签计算完成！")
-        # spark.stop()
 
 
 # if __name__ == '__main__':

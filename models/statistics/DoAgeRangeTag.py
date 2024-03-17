@@ -62,7 +62,7 @@ class DoAgeRangeTag(object):
         )
         .select(
             col("id").alias("userId"),  # 重命名id列为userId
-            col("name").alias("ageRange")  # 如果需要，可以取消注释这行来重命名name列为agerange
+            col("name").alias("ageRange")  
         )
         )
         # rst.show()

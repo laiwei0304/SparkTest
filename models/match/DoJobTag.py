@@ -70,4 +70,3 @@ class DoJobTag(object):
             .option("password", 'admin') \
             .save()
         print("职业标签计算完成！")
-        # spark.stop()
